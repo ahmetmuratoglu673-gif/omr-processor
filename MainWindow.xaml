@@ -1,0 +1,147 @@
+﻿<Window x:Class="OMR_staj.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Optik Okuma ve Soru Arsivleme Sistemi" Height="850" Width="1300"
+        WindowStartupLocation="CenterScreen">
+
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="400" />
+        </Grid.ColumnDefinitions>
+
+        <!-- SOL TARAF: Resim Gosterim Alani -->
+        <Border Grid.Column="0" BorderBrush="Gray" BorderThickness="1" Margin="0,0,10,0" Background="White">
+            <Viewbox Stretch="Uniform">
+                <Grid x:Name="gridResimAlani">
+                    <Image x:Name="imgKagit" Stretch="None" 
+                           MouseDown="imgKagit_MouseDown" 
+                           MouseMove="imgKagit_MouseMove" 
+                           MouseUp="imgKagit_MouseUp"/>
+                    <Canvas x:Name="cizimTuvali" Background="Transparent" IsHitTestVisible="False"/>
+                </Grid>
+            </Viewbox>
+        </Border>
+
+        <!-- SAG TARAF: Sekmeler ve Kontrol Paneli -->
+        <TabControl Grid.Column="1">
+
+            <!-- SEKME 1: SABLON -->
+            <TabItem Header="1.Aşama">
+                <StackPanel Margin="10">
+                    <Button x:Name="btnKagitSec" Content="Okunacak Optik" Height="30" Click="btnKagitSec_Click" Margin="0,0,0,10"/>
+
+                    <TextBlock Text="Dersin Adı (JSON.kordinatı.):" FontWeight="Bold" Margin="0,0,0,3"/>
+                    <TextBox x:Name="txtDersAdi" Height="26" Margin="0,0,0,10" Text="Turkce"/>
+
+                    <TextBlock Text="Alan Seçimi:" FontWeight="Bold" Margin="0,0,0,3"/>
+                    <ComboBox x:Name="cmbAlanlar" Height="26" Margin="0,0,0,10">
+                        <ComboBoxItem Content="kimlikno"/>
+                        <ComboBoxItem Content="soruno"/>
+                    </ComboBox>
+
+                    <TextBlock Text="Json.Kordinatı:" FontWeight="Bold" Margin="0,0,0,3"/>
+                    <ListBox x:Name="lstKoordinatlar" Height="200" Margin="0,0,0,10"/>
+
+                    <Button x:Name="btnSecileniSil" Content="Sil" Height="30" Click="btnSecileniSil_Click" Margin="0,0,0,10" Background="RED"/>
+                    <Button x:Name="btnSablonKaydet" Content="Json.Kaydet" Height="35" Click="btnSablonKaydet_Click" Background="LightGreen"/>
+                </StackPanel>
+            </TabItem>
+
+            <!-- SEKME 2: URETIM BANDI -->
+            <TabItem Header="2.Aşama">
+                <ScrollViewer VerticalScrollBarVisibility="Auto">
+                    <StackPanel Margin="10">
+                        <TextBlock Text="1) JSON Şablonunu Seçin:" FontWeight="Bold" Margin="0,0,0,3"/>
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="30"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="txtJsonSablon" Grid.Column="0" IsReadOnly="True" Height="26"/>
+                            <Button x:Name="btnJsonSec_Btn" Grid.Column="1" Content="..." Click="btnJsonSec_Click"/>
+                        </Grid>
+
+                        <TextBlock Text="2) Okunacak Optiklerin Olduğu Klasör (Kaynak):" FontWeight="Bold" Margin="0,0,0,3"/>
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="257*"/>
+                                <ColumnDefinition Width="87*"/>
+                                <ColumnDefinition Width="30"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="txtKlasorOkunacak" Grid.Column="0" IsReadOnly="True" Height="26" Grid.ColumnSpan="2"/>
+                            <Button x:Name="btnKlasorOkunacak_Btn" Grid.Column="2" Content="..." Click="btnKlasorOkunacak_Click" Height="26" VerticalAlignment="Center"/>
+                        </Grid>
+
+                        <TextBlock Text="3) Arşiv Klasörü (Başarılı Okunanlar Buraya Gider):" FontWeight="Bold" Margin="0,0,0,3"/>
+                        <Grid Margin="0,0,0,10">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="30"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="txtKlasorOkunmus" Grid.Column="0" IsReadOnly="True" Height="26"/>
+                            <Button x:Name="txtKlasorOkunmus_Btn" Grid.Column="1" Content="..." Click="btnKlasorOkunmus_Click"/>
+                        </Grid>
+
+                        <TextBlock Text="4) Hatalı Klasörü (TC Okunamayanlar Buraya Gider):" FontWeight="Bold" Margin="0,0,0,3"/>
+                        <Grid Margin="0,0,0,20">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="30"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="txtKlasorHatali" Grid.Column="0" IsReadOnly="True" Height="26"/>
+                            <Button x:Name="txtKlasorHatali_Btn" Grid.Column="1" Content="..." Click="btnKlasorHatali_Click"/>
+                        </Grid>
+
+                        <Button x:Name="btnTopluIslemBaslat" Content="Tarat" Height="45" FontWeight="Bold" Click="btnTopluIslemBaslat_Click" Background="LightBlue" Margin="0,0,0,10"/>
+                        <TextBlock x:Name="lblDurum" Text="Durum: Hazır" FontWeight="SemiBold" FontSize="14" Foreground="DarkBlue" Margin="0,0,0,5"/>
+                    </StackPanel>
+                </ScrollViewer>
+            </TabItem>
+
+            <!-- SEKME 3: TC SORGULAMA -->
+            <TabItem Header="3. TC Sorgulama">
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="150"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- SOL: TC LİSTESİ VE BUTONLAR -->
+                    <DockPanel Grid.Column="0" Margin="0,0,5,0">
+                        <TextBlock Text="TC veya No Ara:" DockPanel.Dock="Top" FontWeight="Bold" Margin="0,0,0,3"/>
+                        <TextBox x:Name="txtTcArama" Height="26" DockPanel.Dock="Top" Margin="0,0,0,5" TextChanged="txtTcArama_TextChanged"/>
+
+                        <Button x:Name="btnTcSil" Content="🗑️ TC Sil" Height="28" DockPanel.Dock="Bottom" Margin="0,5,0,0" Background="#FFFFCCCC" Click="btnTcSil_Click"/>
+                        <Button x:Name="btnExceleAktar" Content="📊 Excel'e Aktar" Height="28" DockPanel.Dock="Bottom" Margin="0,5,0,0" Background="#FFCCFFCC" Click="btnExceleAktar_Click"/>
+                        <Button x:Name="btnListeyiYenile" Content="🔄 Listeyi Yenile" Height="28" DockPanel.Dock="Bottom" Margin="0,5,0,0" Click="btnListeyiYenile_Click"/>
+
+                        <ListBox x:Name="lstTcListesi" SelectionChanged="lstTcListesi_SelectionChanged"/>
+                    </DockPanel>
+
+                    <!-- SAĞ: SEÇİLEN TC'YE AİT SORULAR -->
+                    <ScrollViewer Grid.Column="1" VerticalScrollBarVisibility="Auto">
+                        <ItemsControl x:Name="icSorguSonuclari">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="Gray" BorderThickness="1" Margin="5" Padding="5" Background="White">
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding SoruAdi}" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,3"/>
+                                            <Image Source="{Binding Goruntu}" Width="150" Stretch="Uniform" MouseDown="SoruResim_MouseDown" Tag="{Binding ResimYolu}"/>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
+                </Grid>
+            </TabItem>
+
+        </TabControl>
+    </Grid>
+</Window>
